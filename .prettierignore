@@ -1,0 +1,32 @@
+# Node modules
+node_modules
+
+# Build output
+dist
+build
+coverage
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Git files
+.git
+.gitignore
+
+# Package manager files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
