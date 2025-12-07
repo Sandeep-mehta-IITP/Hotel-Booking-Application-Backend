@@ -17,11 +17,12 @@ app.use(clerkMiddleware());
 
 
 // import routes
-import clerkWebhooks from "./controllers/clerkWebHooks.controller.js";
+import clerkRouter from "./routes/clerk.routes.js"
 
 
 //routes decelration
-app.use("/api/v1/clerk", clerkWebhooks);
+app.use("/api/v1/clerk", clerkRouter);
+
 
 
 // Error Handling of Express

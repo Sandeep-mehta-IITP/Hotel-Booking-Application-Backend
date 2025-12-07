@@ -9,9 +9,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
-      index: true,
       trim: true,
     },
     email: {
@@ -19,7 +17,6 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       lowercase: true,
-      index: true,
       trim: true,
     },
     image: {
@@ -31,12 +28,10 @@ const userSchema = new Schema(
       enum: ["user", "hotelOwner"],
       default: "user",
     },
-    recentlySearchedCities: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    recentlySearchedCities: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,
