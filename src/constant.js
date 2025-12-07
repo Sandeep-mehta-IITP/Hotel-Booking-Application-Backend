@@ -1,1 +1,1 @@
-export const DB_NAME = "Hotel Booking Application"
+export const DB_NAME = "HotelBookingApp"
