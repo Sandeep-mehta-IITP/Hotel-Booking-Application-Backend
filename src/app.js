@@ -17,11 +17,13 @@ app.use(clerkMiddleware());
 
 
 // import routes
-import clerkRouter from "./routes/clerk.routes.js"
+import clerkRouter from "./routes/clerk.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 
 //routes decelration
 app.use("/api/v1/clerk", clerkRouter);
+app.use("/api/v1/users", userRouter);
 
 
 

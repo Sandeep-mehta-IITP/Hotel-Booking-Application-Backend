@@ -29,17 +29,23 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
     // switch case for different events
     switch (type) {
       case "user.created": {
-        await User.create(userData);
+        await User.findOneAndUpdate(
+          { clerkId: data.id },
+          userData,
+          { upsert: true, new: true } // create if not exist
+        );
         break;
       }
 
       case "user.updated": {
-        await User.findByIdAndUpdate(data.id, userData);
+        await User.findOneAndUpdate({ clerkId: data.id }, userData, {
+          new: true,
+        });
         break;
       }
 
       case "user.deleted": {
-        await User.findByIdAndDelete(data.id);
+        await User.findOneAndDelete({ clerkId: data.id });
         break;
       }
 
