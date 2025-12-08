@@ -19,11 +19,13 @@ app.use(clerkMiddleware());
 // import routes
 import clerkRouter from "./routes/clerk.routes.js";
 import userRouter from "./routes/user.routes.js";
+import hotelRouter from "./routes/hotel.routes.js";
 
 
 //routes decelration
 app.use("/api/v1/clerk", clerkRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/hotels", hotelRouter);
 
 
 
