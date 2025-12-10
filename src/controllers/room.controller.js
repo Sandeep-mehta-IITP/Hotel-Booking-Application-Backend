@@ -58,10 +58,48 @@ const createRoom = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, createdRoom, "Room created successfully."));
 });
 
-
 //TODO: Get all romms
-const getRooms = asyncHandler( async (req, res) => {
-    
-})
+const getRooms = asyncHandler(async (req, res) => {
+  const rooms = await Room.find({ isAvailable: true })
+    .populate({
+      path: "hotel",
+      populate: {
+        path: "owner",
+        select: "image",
+      },
+    })
+    .sort({ createdAt: -1 })
+    .lean();
 
-export { createRoom };
+  if (!rooms || rooms.length === 0) {
+    throw new apiError(404, "No room available");
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, rooms, "Rooms fetched successfully."));
+});
+
+// TODO: get all rooms for a specific hotel
+const getOwnerRooms = asyncHandler(async (req, res) => {
+  const ownerId = req.auth?.userId;
+
+  if (!ownerId) {
+    throw new apiError(401, "Unauthorized acess.");
+  }
+
+  const hotelData = await Hotel.findOne({ owner: ownerId }).lean();
+
+  if (!hotelData) {
+    throw new apiError(404, "No hotel found for this owner.");
+  }
+
+  const rooms = await Room.find({ hotel: hotelData?._id.toString() })
+    .populate("hotel")
+    .lean();
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, rooms, "All rooms fetched successfully."));
+});
+export { createRoom, getRooms, getOwnerRooms };
