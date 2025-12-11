@@ -102,4 +102,29 @@ const getOwnerRooms = asyncHandler(async (req, res) => {
     .status(200)
     .json(new apiResponse(200, rooms, "All rooms fetched successfully."));
 });
-export { createRoom, getRooms, getOwnerRooms };
+
+//TODO: toggle availability for a room
+const toggleRoomAvailability = asyncHandler(async (req, res) => {
+  const { roomId } = req.body;
+
+  if (!roomId) {
+    throw new apiError(400, "Room ID is required.");
+  }
+
+  const roomData = (await Room.findById(roomId)) / lean();
+
+  if (!roomData) {
+    throw new apiError(404, "No room found.");
+  }
+
+  const updatedRoom = await Room.findByIdAndUpdate(
+    roomId,
+    { isAvailable: !roomData.isAvailable },
+    { new: true }
+  ).lean();
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, updatedRoom, "Room availability updated."));
+});
+export { createRoom, getRooms, getOwnerRooms, toggleRoomAvailability };
