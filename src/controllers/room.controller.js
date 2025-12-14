@@ -111,7 +111,7 @@ const toggleRoomAvailability = asyncHandler(async (req, res) => {
     throw new apiError(400, "Room ID is required.");
   }
 
-  const roomData = (await Room.findById(roomId)) / lean();
+  const roomData = await Room.findById(roomId).lean();
 
   if (!roomData) {
     throw new apiError(404, "No room found.");
@@ -121,7 +121,7 @@ const toggleRoomAvailability = asyncHandler(async (req, res) => {
     roomId,
     { isAvailable: !roomData.isAvailable },
     { new: true }
-  ).lean();
+  );
 
   return res
     .status(200)

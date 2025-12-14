@@ -153,14 +153,13 @@ const getHotelBookings = asyncHandler(async (req, res) => {
     throw new apiError(401, "Unauthorized access.");
   }
 
-  const hotel = await Hotel.find({ owner }).lean();
+  const hotel = await Hotel.findOne({ owner }).lean();
   if (!hotel) {
     throw new apiError(404, "No hotel found.");
   }
 
-  const bookings = (
-    await Booking.find({ hotel: hotel?._id }).populate("room hotel user")
-  )
+  const bookings = await Booking.find({ hotel: hotel?._id })
+    .populate("room hotel user")
     .sort({ createdAt: -1 })
     .lean();
 
@@ -188,4 +187,9 @@ const getHotelBookings = asyncHandler(async (req, res) => {
     );
 });
 
-export { checkAvailabilityApi, createBooking, getUserBookings, getHotelBookings };
+export {
+  checkAvailabilityApi,
+  createBooking,
+  getUserBookings,
+  getHotelBookings,
+};
