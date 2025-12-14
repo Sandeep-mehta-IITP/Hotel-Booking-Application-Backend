@@ -1,18 +1,20 @@
 import express from "express";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
+import morgan from "morgan";
 
 const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: process.env.ORIGIN_CORS,
     credentials: true,
   })
 );
 
 app.use(express.json({ limit: "99mb" }));
 app.use(clerkMiddleware());
+app.use(morgan("dev"));
 
 // import routes
 import clerkRouter from "./routes/clerk.routes.js";
