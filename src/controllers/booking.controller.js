@@ -4,6 +4,7 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { apiError } from "../utils/apiError.js";
 import { Hotel } from "../models/hotel.model.js";
 import { Booking } from "../models/booking.model.js";
+import transporter from "../config/nodemailer.js";
 
 //TODO: function for checkavailability
 const checkAvailability = async (room, start, end) => {
@@ -117,6 +118,96 @@ const createBooking = asyncHandler(async (req, res) => {
   if (!newBooking) {
     throw new apiError(500, "Failed to create booking.");
   }
+
+  // mail options for comfirmation mail
+  const mailOptions = {
+    from: `"QuickStay Hotel Booking" <${process.env.SENDER_EMAIL}>`,
+    to: req.user.email,
+    subject: "Your Hotel Booking is Confirmed | QuickStay",
+    html: `
+  <div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background-color: #f4f6f8; padding: 30px;">
+    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); padding: 24px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">QuickStay</h1>
+        <p style="color: #d1e8ff; margin-top: 6px; font-size: 14px;">
+          Premium Hotel Booking Experience
+        </p>
+      </div>
+
+      <!-- Body -->
+      <div style="padding: 28px;">
+        <h2 style="color: #333333; margin-bottom: 10px;">
+          Booking Confirmed ✅
+        </h2>
+
+        <p style="color: #555555; font-size: 15px;">
+          Dear <strong>${req.user.username}</strong>,
+        </p>
+
+        <p style="color: #555555; font-size: 15px; line-height: 1.6;">
+          Thank you for choosing <strong>QuickStay</strong>.  
+          We’re delighted to confirm your hotel booking. Below are your reservation details:
+        </p>
+
+        <!-- Booking Details Card -->
+        <div style="border: 1px solid #eaeaea; border-radius: 10px; padding: 18px; margin: 20px 0; background: #fafafa;">
+          <table width="100%" cellpadding="8" cellspacing="0" style="font-size: 14px; color: #333;">
+            <tr>
+              <td><strong>Booking ID</strong></td>
+              <td style="text-align: right;">${newBooking?._id}</td>
+            </tr>
+            <tr>
+              <td><strong>Hotel Name</strong></td>
+              <td style="text-align: right;">${roomData?.hotel?.name}</td>
+            </tr>
+            <tr>
+              <td><strong>Location</strong></td>
+              <td style="text-align: right;">${roomData?.hotel?.address}</td>
+            </tr>
+            <tr>
+              <td><strong>Check-in Date</strong></td>
+              <td style="text-align: right;">
+                ${new Date(newBooking?.checkInDate).toDateString()}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Amount</strong></td>
+              <td style="text-align: right; color: #2c5364;">
+                ${process.env.CURRENCY || "$"} ${newBooking?.totalPrice} / night
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <p style="color: #555555; font-size: 15px; line-height: 1.6;">
+          We look forward to welcoming you and ensuring a comfortable stay.
+        </p>
+
+        <p style="color: #555555; font-size: 14px;">
+          If you need any assistance or wish to modify your booking, feel free to contact our support team.
+        </p>
+
+        <p style="margin-top: 24px; color: #333;">
+          Warm regards,<br/>
+          <strong>QuickStay Team</strong>
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div style="background: #f0f2f5; padding: 16px; text-align: center; font-size: 12px; color: #777;">
+        © ${new Date().getFullYear()} QuickStay. All rights reserved.
+        <br/>
+        This is an automated email. Please do not reply.
+      </div>
+
+    </div>
+  </div>
+  `,
+  };
+
+  await transporter.sendMail(mailOptions);
 
   return res
     .status(200)
