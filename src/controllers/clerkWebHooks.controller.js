@@ -19,16 +19,16 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
 
     const { data, type } = req.body;
 
-    const userData = {
-      _id: data.id,
-      email: data.email_addresses[0]?.email_address,
-      username: `${data.first_name} ${data.last_name}`,
-      image: data.image_url,
-    };
-
     // switch case for different events
     switch (type) {
       case "user.created": {
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses[0]?.email_address,
+          username: `${data.first_name} ${data.last_name}`,
+          image: data.image_url,
+        };
+
         await User.findOneAndUpdate(
           { clerkId: data.id },
           userData,
@@ -38,6 +38,13 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
       }
 
       case "user.updated": {
+        const userData = {
+          _id: data.id,
+          email: data.email_addresses[0]?.email_address,
+          username: `${data.first_name} ${data.last_name}`,
+          image: data.image_url,
+        };
+
         await User.findOneAndUpdate({ clerkId: data.id }, userData, {
           new: true,
         });
