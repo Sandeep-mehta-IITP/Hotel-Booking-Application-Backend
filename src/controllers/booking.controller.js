@@ -53,7 +53,7 @@ const checkAvailabilityApi = asyncHandler(async (req, res) => {
 
 //TODO: create a new booking
 const createBooking = asyncHandler(async (req, res) => {
-  const { room, checkInDate, checkOutDate, guets } = req.body;
+  const { room, checkInDate, checkOutDate, guests } = req.body;
   const userId = req.auth?.userId;
 
   if (!room || !checkInDate || !checkOutDate) {
@@ -108,7 +108,7 @@ const createBooking = asyncHandler(async (req, res) => {
     user: userId,
     room,
     hotel: roomData?.hotel?._id,
-    guets: +guets,
+    guests: +guests,
     checkInDate: start,
     checkOutDate: end,
     totalPrice,

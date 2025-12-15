@@ -29,7 +29,7 @@ const bookingSchema = new Schema(
       type: Number,
       required: true,
     },
-    guets: {
+    guests: {
       type: Number,
       required: true,
     },
