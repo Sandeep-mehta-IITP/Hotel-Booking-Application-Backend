@@ -5,6 +5,7 @@ import { apiError } from "../utils/apiError.js";
 import { Hotel } from "../models/hotel.model.js";
 import { Booking } from "../models/booking.model.js";
 import transporter from "../config/nodemailer.js";
+import stripe from "stripe";
 
 //TODO: function for checkavailability
 const checkAvailability = async (room, start, end) => {
@@ -278,9 +279,68 @@ const getHotelBookings = asyncHandler(async (req, res) => {
     );
 });
 
+// Payment conrtoller
+const stripePayment = asyncHandler(async (req, res) => {
+  const { bookingId } = req.body;
+
+  if (!bookingId) {
+    throw new apiError(400, "Booking ID is required.");
+  }
+
+  const booking = await Booking.findById(bookingId).lean();
+
+  if (booking.isPaid) {
+    throw new apiError(400, "Booking already paid.");
+  }
+
+  const roomData = await Room.findById(booking.room).populate("hotel").lean();
+
+  if (!roomData) {
+    throw new apiError(404, "Room not found.");
+  }
+
+  const totalPrice = booking.totalPrice;
+  const { origin } = req.headers;
+
+  const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
+
+  const line_items = [
+    {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: roomData?.hotel?.name,
+        },
+        unit_amount: totalPrice * 100,
+      },
+      quantity: 1,
+    },
+  ];
+
+  // Create checkout session
+  const session = await stripeInstance.checkout.sessions.create({
+    line_items,
+    mode: "payment",
+    success_url: `${origin}/loader/my-bookings`,
+    cancel_url: `${origin}/my-bookings`,
+    metadata: {
+      bookingId,
+    },
+  });
+
+  if (!session?.url) {
+    throw new apiError(500, "Payment failed.");
+  }
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, { url: session?.url }, "Payment Successful !"));
+});
+
 export {
   checkAvailabilityApi,
   createBooking,
   getUserBookings,
   getHotelBookings,
+  stripePayment,
 };
