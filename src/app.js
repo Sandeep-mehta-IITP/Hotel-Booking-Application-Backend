@@ -22,6 +22,7 @@ import userRouter from "./routes/user.routes.js";
 import hotelRouter from "./routes/hotel.routes.js";
 import roomRouter from "./routes/room.routes.js";
 import bookingRouter from "./routes/booking.routes.js";
+import stripeRouter from "./routes/stripe.routes.js";
 
 //routes decelration
 app.use("/api/v1/clerk", clerkRouter);
@@ -29,6 +30,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/rooms", roomRouter);
 app.use("/api/v1/bookings", bookingRouter);
+app.use("/api/v1", stripeRouter);
 
 // Error Handling of Express
 app.use((err, req, res, next) => {
