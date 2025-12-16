@@ -30,7 +30,7 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
         };
 
         await User.findOneAndUpdate(
-          { clerkId: data.id },
+          { _id: data.id },
           userData,
           { upsert: true, new: true } // create if not exist
         );
@@ -45,14 +45,14 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
           image: data.image_url,
         };
 
-        await User.findOneAndUpdate({ clerkId: data.id }, userData, {
+        await User.findOneAndUpdate({ _id: data.id }, userData, {
           new: true,
         });
         break;
       }
 
       case "user.deleted": {
-        await User.findOneAndDelete({ clerkId: data.id });
+        await User.findOneAndDelete({ _id: data.id });
         break;
       }
 
