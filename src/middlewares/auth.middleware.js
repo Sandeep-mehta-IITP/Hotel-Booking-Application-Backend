@@ -10,6 +10,8 @@ export const authUser = asyncHandler(async (req, _, next) => {
   }
 
   const user = await User.findById({_id: userId});
+  console.log("user", user);
+  
   req.user = user;
   next();
 });
