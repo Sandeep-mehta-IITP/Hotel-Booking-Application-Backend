@@ -3,9 +3,11 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
 export const authUser = asyncHandler(async (req, _, next) => {
-   console.log("REQ.AUTH 👉", req.auth);
-  const { userId } = req.auth;
+  const auth = req.auth();
 
+  console.log("AUTH OBJECT 👉", auth);
+
+  const { userId } = auth;
   if (!userId) {
     throw new apiError(401, "Unauthorized access");
   }
