@@ -5,12 +5,15 @@ import morgan from "morgan";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(
   cors({
     origin: process.env.ORIGIN_CORS,
     credentials: true,
   })
 );
+
 
 app.use(express.json({ limit: "99mb" }));
 app.use(clerkMiddleware());

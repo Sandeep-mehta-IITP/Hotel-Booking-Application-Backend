@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
 export const authUser = asyncHandler(async (req, _, next) => {
+   console.log("REQ.AUTH 👉", req.auth);
   const { userId } = req.auth;
 
   if (!userId) {
