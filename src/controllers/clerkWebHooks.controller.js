@@ -15,9 +15,9 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
     };
 
     // Verify webhook signature
-    await whook.verify(JSON.stringify(req.body), headers);
+    await whook.verify(req.body, headers);
 
-    const { data, type } = req.body;
+    const { data, type } = JSON.parse(req.body);
 
     // switch case for different events
     switch (type) {
