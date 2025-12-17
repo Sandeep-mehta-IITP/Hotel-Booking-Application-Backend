@@ -19,6 +19,9 @@ const clerkWebhooks = asyncHandler(async (req, res) => {
 
     const { data, type } = JSON.parse(req.body);
 
+    console.log(" data of clerk user", data);
+    
+
     // switch case for different events
     switch (type) {
       case "user.created": {
