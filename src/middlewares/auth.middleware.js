@@ -9,7 +9,7 @@ export const authUser = asyncHandler(async (req, _, next) => {
     throw new apiError(401, "Unauthorized access");
   }
 
-  const user = await User.findById(userId);
+  const user = await User.findById({_id: userId});
   req.user = user;
   next();
 });
