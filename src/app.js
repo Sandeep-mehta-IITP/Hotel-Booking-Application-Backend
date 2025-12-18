@@ -3,9 +3,18 @@ import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import morgan from "morgan";
 
+// import routes
+import clerkRouter from "./routes/clerk.routes.js";
+import userRouter from "./routes/user.routes.js";
+import hotelRouter from "./routes/hotel.routes.js";
+import roomRouter from "./routes/room.routes.js";
+import bookingRouter from "./routes/booking.routes.js";
+import stripeRouter from "./routes/stripe.routes.js";
+
 const app = express();
 
 app.set("trust proxy", 1);
+app.use("/api/v1/clerk", clerkRouter); // webhook first priority 
 
 app.use(
   cors({
@@ -19,16 +28,9 @@ app.use(express.json({ limit: "99mb" }));
 app.use(clerkMiddleware());
 app.use(morgan("dev"));
 
-// import routes
-import clerkRouter from "./routes/clerk.routes.js";
-import userRouter from "./routes/user.routes.js";
-import hotelRouter from "./routes/hotel.routes.js";
-import roomRouter from "./routes/room.routes.js";
-import bookingRouter from "./routes/booking.routes.js";
-import stripeRouter from "./routes/stripe.routes.js";
+
 
 //routes decelration
-app.use("/api/v1/clerk", clerkRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/rooms", roomRouter);
