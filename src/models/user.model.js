@@ -2,14 +2,12 @@ import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
-    _id: {
-      type: String,
-      required: true,
-    },
     username: {
       type: String,
       required: true,
+      unique: true,
       lowercase: true,
+      index: true,
       trim: true,
     },
     email: {
@@ -18,6 +16,12 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
+    },
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+      index: true,
     },
     image: {
       type: String,
@@ -31,6 +35,9 @@ const userSchema = new Schema(
     recentlySearchedCities: {
       type: [String],
       default: [],
+    },
+    refreshToken: {
+      type: String,
     },
   },
   {
