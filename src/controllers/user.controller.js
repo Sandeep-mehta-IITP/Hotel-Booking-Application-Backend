@@ -56,6 +56,9 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
+  console.log("req files" , req.file);
+  
+
   const avatarLocalPath = req.file?.path;
 
   if (!avatarLocalPath) {
