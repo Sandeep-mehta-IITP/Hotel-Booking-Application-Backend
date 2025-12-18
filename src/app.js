@@ -15,6 +15,7 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.use("/api/v1/clerk", clerkRouter); // webhook first priority 
+app.use("/api/v1", stripeRouter); // it is using raw data not in json
 
 app.use(
   cors({
@@ -35,7 +36,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/rooms", roomRouter);
 app.use("/api/v1/bookings", bookingRouter);
-app.use("/api/v1", stripeRouter);
+
 
 // Error Handling of Express
 app.use((err, req, res, next) => {
