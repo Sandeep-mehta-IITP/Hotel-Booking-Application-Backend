@@ -223,7 +223,7 @@ const getUserBookings = asyncHandler(async (req, res) => {
     throw new apiError(401, "Unauthorized access.");
   }
 
-  const bookings = await Booking.find({ user })
+  const bookings = await Booking.findOne({ user })
     .populate("room hotel")
     .sort({ createdAt: -1 })
     .lean();
