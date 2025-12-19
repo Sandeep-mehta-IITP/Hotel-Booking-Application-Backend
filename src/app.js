@@ -6,7 +6,7 @@ import stripeRouter from "./routes/stripe.routes.js";
 
 const app = express();
 
-app.use("/api/v1", stripeRouter); // it is using raw data not in json
+app.use("/api/v1", express.raw({ type: "application/json" }), stripeRouter); // it is using raw data not in json
 
 app.use(
   cors({
@@ -15,11 +15,9 @@ app.use(
   })
 );
 
-
 app.use(express.json({ limit: "99mb" }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
 
 // import routes
 import userRouter from "./routes/user.routes.js";
@@ -34,7 +32,6 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/rooms", roomRouter);
 app.use("/api/v1/bookings", bookingRouter);
-
 
 // Error Handling of Express
 app.use((err, req, res, next) => {
