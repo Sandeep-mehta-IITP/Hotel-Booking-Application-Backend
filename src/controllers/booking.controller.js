@@ -219,14 +219,20 @@ const createBooking = asyncHandler(async (req, res) => {
 const getUserBookings = asyncHandler(async (req, res) => {
   const user = req.user?._id;
 
+  console.log("user in booking contorller", user);
+  
+
   if (!user) {
     throw new apiError(401, "Unauthorized access.");
   }
 
-  const bookings = await Booking.findOne({ user })
+  const bookings = await Booking.find({ user })
     .populate("room hotel")
     .sort({ createdAt: -1 })
     .lean();
+
+    console.log("bookings data0", bookings);
+    
 
   if (!bookings || bookings.length === 0) {
     throw new apiError(404, "No bookings found.");
