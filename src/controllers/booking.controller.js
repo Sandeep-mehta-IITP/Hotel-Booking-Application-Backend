@@ -327,8 +327,8 @@ const stripePayment = asyncHandler(async (req, res) => {
   const session = await stripeInstance.checkout.sessions.create({
     line_items,
     mode: "payment",
-    success_url: `${origin}/loader/my-bookings`,
-    cancel_url: `${origin}/my-bookings`,
+    success_url: `${process.env.ORIGIN_CORS}/loader/my-bookings`,
+    cancel_url: `${process.env.ORIGIN_CORS}/my-bookings`,
     metadata: {
       bookingId,
     },
