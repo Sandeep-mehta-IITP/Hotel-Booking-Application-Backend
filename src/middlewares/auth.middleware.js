@@ -9,6 +9,8 @@ export const authUser = asyncHandler(async (req, _, next) => {
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
+      //console.log("token", token);
+      
     if (!token) {
       throw new apiError(401, "Unauthorized access - token missing");
     }

@@ -56,7 +56,7 @@ const checkAvailabilityApi = asyncHandler(async (req, res) => {
 //TODO: create a new booking
 const createBooking = asyncHandler(async (req, res) => {
   const { room, checkInDate, checkOutDate, guests } = req.body;
-  const userId = req.auth?.userId;
+  const userId = req.user?._id;
 
   if (!room || !checkInDate || !checkOutDate) {
     throw new apiError(
@@ -239,7 +239,7 @@ const getUserBookings = asyncHandler(async (req, res) => {
 
 //TODO: get hotel bookings
 const getHotelBookings = asyncHandler(async (req, res) => {
-  const owner = req.auth.userId;
+  const owner = req.user._id;
 
   if (!owner) {
     throw new apiError(401, "Unauthorized access.");

@@ -13,7 +13,7 @@ const createRoom = asyncHandler(async (req, res) => {
     throw new apiError(400, "All fields required.");
   }
 
-  const hotel = await Hotel.findOne({ owner: req.auth?.userId });
+  const hotel = await Hotel.findOne({ owner: req.user?._id });
   if (!hotel) {
     throw new apiError(404, "No Hotel Found.");
   }
@@ -71,18 +71,20 @@ const getRooms = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .lean();
 
-  if (!rooms || rooms.length === 0) {
-    throw new apiError(404, "No room available");
-  }
-
   return res
     .status(200)
-    .json(new apiResponse(200, rooms, "Rooms fetched successfully."));
+    .json(
+      new apiResponse(
+        200,
+        rooms,
+        rooms.length ? "Rooms fetched successfully." : "No rooms available"
+      )
+    );
 });
 
 // TODO: get all rooms for a specific hotel
 const getOwnerRooms = asyncHandler(async (req, res) => {
-  const ownerId = req.auth?.userId;
+  const ownerId = req.user?._id;
 
   if (!ownerId) {
     throw new apiError(401, "Unauthorized acess.");

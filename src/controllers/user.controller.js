@@ -56,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
-  console.log("req files" , req.file);
+  //console.log("req files" , req.file);
   
 
   const avatarLocalPath = req.file?.path;
@@ -95,8 +95,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
   };
 
@@ -149,8 +149,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
     path: "/",
   };
 
@@ -184,8 +184,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       path: "/",
     };
 
@@ -256,6 +256,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+//TODO: fetch login user information
+const getCurrentUser = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    throw new apiError(401, "User not authenticated");
+  }
+  return res
+    .status(200)
+    .json(
+      new apiResponse(200, req.user, "Curent user deatils fetched successfully")
+    );
+});
+
 const getUserData = asyncHandler(async (req, res) => {
   if (!req.user) {
     throw new apiError(401, "Unauthorized: User not logged in.");
@@ -318,6 +330,7 @@ export {
   registerUser,
   loginUser,
   logoutUser,
+  getCurrentUser,
   refreshAccessToken,
   getUserData,
   recentlySearchedCitiesHandler,

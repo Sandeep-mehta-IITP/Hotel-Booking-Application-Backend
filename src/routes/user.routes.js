@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authUser } from "../middlewares/auth.middleware.js";
 import {
+  getCurrentUser,
   getUserData,
   loginUser,
   logoutUser,
@@ -15,6 +16,7 @@ const router = Router();
 router.route("/register").post(upload.single("image"), registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(authUser, logoutUser);
+router.route("/me").get(authUser, getCurrentUser);
 router.route("/refresh-access-token").post(refreshAccessToken);
 router.route("/").get(authUser, getUserData);
 router

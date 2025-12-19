@@ -1,12 +1,7 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import morgan from "morgan";
-
-// import routes
-import userRouter from "./routes/user.routes.js";
-import hotelRouter from "./routes/hotel.routes.js";
-import roomRouter from "./routes/room.routes.js";
-import bookingRouter from "./routes/booking.routes.js";
 import stripeRouter from "./routes/stripe.routes.js";
 
 const app = express();
@@ -22,11 +17,19 @@ app.use(
 
 
 app.use(express.json({ limit: "99mb" }));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 
+// import routes
+import userRouter from "./routes/user.routes.js";
+import hotelRouter from "./routes/hotel.routes.js";
+import roomRouter from "./routes/room.routes.js";
+import bookingRouter from "./routes/booking.routes.js";
+import healthcheckRouter from "./routes/healthCheck.routes.js";
 
 //routes decelration
+app.use("/api/v1/healthcheck", healthcheckRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/hotels", hotelRouter);
 app.use("/api/v1/rooms", roomRouter);
