@@ -287,6 +287,8 @@ const getHotelBookings = asyncHandler(async (req, res) => {
 
 // Payment conrtoller
 const stripePayment = asyncHandler(async (req, res) => {
+  console.log("req body in stripe payment", req.body);
+  
   const { bookingId } = req.body;
 
   if (!bookingId) {
