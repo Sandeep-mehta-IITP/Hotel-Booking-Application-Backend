@@ -2,11 +2,11 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import stripeRouter from "./routes/stripe.routes.js";
+import { stripeWebhooks } from "./controllers/stripeWebhook.controller.js";
 
 const app = express();
 
-app.use("/api/v1", express.raw({ type: "application/json" }), stripeRouter); // it is using raw data not in json
+app.use("/api/v1/stripe", express.raw({ type: "application/json" }), stripeWebhooks); // it is using raw data not in json
 
 app.use(
   cors({
@@ -25,6 +25,7 @@ import hotelRouter from "./routes/hotel.routes.js";
 import roomRouter from "./routes/room.routes.js";
 import bookingRouter from "./routes/booking.routes.js";
 import healthcheckRouter from "./routes/healthCheck.routes.js";
+
 
 //routes decelration
 app.use("/api/v1/healthcheck", healthcheckRouter);
