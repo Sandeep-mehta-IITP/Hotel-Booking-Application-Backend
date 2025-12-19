@@ -9,7 +9,7 @@ export const authUser = asyncHandler(async (req, _, next) => {
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
-      console.log("token", token);
+      //console.log("token", token);
       
     if (!token) {
       throw new apiError(401, "Unauthorized access - token missing");
@@ -21,7 +21,7 @@ export const authUser = asyncHandler(async (req, _, next) => {
       "-password -refreshToken"
     );
 
-    console.log("user in auth middleware", user);
+    //console.log("user in auth middleware", user);
     
 
     if (!user) {

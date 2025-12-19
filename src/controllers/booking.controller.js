@@ -219,7 +219,7 @@ const createBooking = asyncHandler(async (req, res) => {
 const getUserBookings = asyncHandler(async (req, res) => {
   const user = req.user?._id;
 
-  console.log("user in booking contorller", user);
+  //console.log("user in booking contorller", user);
   
 
   if (!user) {
@@ -287,7 +287,7 @@ const getHotelBookings = asyncHandler(async (req, res) => {
 
 // Payment conrtoller
 const stripePayment = asyncHandler(async (req, res) => {
-  console.log("req body in stripe payment", req.body);
+  //console.log("req body in stripe payment", req.body);
   
   const { bookingId } = req.body;
 

@@ -4,7 +4,7 @@ import { Booking } from "../models/booking.model.js";
 import { apiResponse } from "../utils/apiResponse.js";
 
 const stripeWebhooks = asyncHandler(async (req, res) => {
-  console.log("stripe payment ", req.headers);
+ // console.log("stripe payment ", req.headers);
 
   const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
   const sig = req.headers["stripe-signature"];
@@ -18,7 +18,7 @@ const stripeWebhooks = asyncHandler(async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
-    console.log("Stripe event type:", event.type);
+    //console.log("Stripe event type:", event.type);
   } catch (error) {
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
@@ -33,7 +33,7 @@ const stripeWebhooks = asyncHandler(async (req, res) => {
 
     const { bookingId } = (await session).data[0].metadata;
 
-    console.log("Webhook received for booking:", bookingId);
+    //console.log("Webhook received for booking:", bookingId);
 
     // Mark payment is true
     if (bookingId) {
@@ -43,7 +43,7 @@ const stripeWebhooks = asyncHandler(async (req, res) => {
         status: "confirmed",
       });
 
-      console.log("payment result", result);
+      //console.log("payment result", result);
     }
   }
 
