@@ -24,9 +24,14 @@ const stripeWebhooks = asyncHandler(async (req, res) => {
   }
 
   if (event.type === "payment_intent.succeeded") {
-    const session = event.data.object;
+    const paymentIntent = event.data.object;
+    const paymentIntentId = paymentIntent.id;
 
-    const bookingId = session.metadata?.bookingId;
+    const session = stripeInstance.checkout.sessions.list({
+      payment_intent: paymentIntentId,
+    });
+
+    const { bookingId } = (await session).data[0].metadata;
 
     console.log("Webhook received for booking:", bookingId);
 
