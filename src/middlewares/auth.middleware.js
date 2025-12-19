@@ -21,6 +21,9 @@ export const authUser = asyncHandler(async (req, _, next) => {
       "-password -refreshToken"
     );
 
+    console.log("user in auth middleware", user);
+    
+
     if (!user) {
       throw new apiError(401, "Invalid token");
     }
