@@ -236,11 +236,6 @@ const getUserBookings = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .lean();
 
-  console.log("bookings data0", bookings);
-
-  if (!bookings || bookings.length === 0) {
-    throw new apiError(404, "No bookings found.");
-  }
 
   return res
     .status(200)
