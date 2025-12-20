@@ -27,15 +27,26 @@ const registerHotel = asyncHandler(async (req, res) => {
     city,
     owner,
   });
-  await User.findByIdAndUpdate(owner, { role: "hotelOwner" });
+
+  await User.findByIdAndUpdate(owner, { role: "hotelOwner" }, { new: true });
+
+  const updatedUser = await User.findById(owner).select("-password");
+  // console.log("updated user", updatedUser);
 
   if (!createdHotel) {
     throw new apiError(500, "Failed to register hotel.");
   }
 
-  return res
-    .status(200)
-    .json(new apiResponse(200, createdHotel, "Hotel registered successfully."));
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {
+        hotel: createdHotel,
+        user: updatedUser,
+      },
+      "Hotel registered successfully."
+    )
+  );
 });
 
 export { registerHotel };
