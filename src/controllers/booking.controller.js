@@ -120,12 +120,18 @@ const createBooking = asyncHandler(async (req, res) => {
     throw new apiError(500, "Failed to create booking.");
   }
 
+  res
+    .status(200)
+    .json(new apiResponse(200, newBooking, "Booking created successfully."));
+
   // mail options for comfirmation mail
-  const mailOptions = {
-    from: `"QuickStay Hotel Booking" <${process.env.SENDER_EMAIL}>`,
-    to: req.user.email,
-    subject: "Your Hotel Booking is Confirmed | QuickStay",
-    html: `
+  (async () => {
+    try {
+      const mailOptions = {
+        from: `"QuickStay Hotel Booking" <${process.env.SENDER_EMAIL}>`,
+        to: req.user.email,
+        subject: "Your Hotel Booking is Confirmed | QuickStay",
+        html: `
   <div style="font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background-color: #f4f6f8; padding: 30px;">
     <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08);">
       
@@ -206,13 +212,13 @@ const createBooking = asyncHandler(async (req, res) => {
     </div>
   </div>
   `,
-  };
+      };
 
-  await transporter.sendMail(mailOptions);
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, newBooking, "Booking created successfully."));
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error("❌ Email sending failed:", error.message);
+    }
+  })();
 });
 
 //TODO: get all booking for a user
@@ -220,7 +226,6 @@ const getUserBookings = asyncHandler(async (req, res) => {
   const user = req.user?._id;
 
   //console.log("user in booking contorller", user);
-  
 
   if (!user) {
     throw new apiError(401, "Unauthorized access.");
@@ -231,8 +236,7 @@ const getUserBookings = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .lean();
 
-    console.log("bookings data0", bookings);
-    
+  console.log("bookings data0", bookings);
 
   if (!bookings || bookings.length === 0) {
     throw new apiError(404, "No bookings found.");
@@ -288,7 +292,7 @@ const getHotelBookings = asyncHandler(async (req, res) => {
 // Payment conrtoller
 const stripePayment = asyncHandler(async (req, res) => {
   //console.log("req body in stripe payment", req.body);
-  
+
   const { bookingId } = req.body;
 
   if (!bookingId) {
